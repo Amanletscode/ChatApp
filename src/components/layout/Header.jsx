@@ -11,12 +11,23 @@ import {
   Group as GroupIcon,
   Logout as LogoutIcon,
   Menu as MenuIcon,
-  Notifications as NotificationsIcon
+  Notifications as NotificationsIcon, // Missing comma added here
   Search as SearchIcon,
 } from "@mui/icons-material";
 import React, { useState } from "react";
 import { orange } from "../constants/color";
 import { useNavigate } from "react-router-dom";
+
+// Define IconBtn component before usage
+const IconBtn = ({ title, icon, onClick }) => {
+  return (
+    <Tooltip title={title}>
+      <IconButton color="inherit" size="large" onClick={onClick}>
+        {icon}
+      </IconButton>
+    </Tooltip>
+  );
+};
 
 const Header = () => {
   const navigate = useNavigate();
@@ -51,7 +62,7 @@ const Header = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }} height={"4rem"}>
+    <Box sx={{ flexGrow: 1, height: "4rem" }}>
       <AppBar
         position="static"
         sx={{
@@ -103,25 +114,15 @@ const Header = () => {
               onClick={LogoutHandler}
             />
 
-<IconBtn
+            <IconBtn
               title={"Notifications"}
-              icon={<NotificationsIcon/>}
+              icon={<NotificationsIcon />}
               onClick={openNotification}
             />
           </Box>
         </Toolbar>
       </AppBar>
     </Box>
-  );
-};
-
-const IconBtn = ({ title, icon, onClick }) => {
-  return (
-    <Tooltip title={title}>
-      <IconButton color="inherit" size="large" onClick={onClick}>
-        {icon}
-      </IconButton>
-    </Tooltip>
   );
 };
 
