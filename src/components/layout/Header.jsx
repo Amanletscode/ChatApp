@@ -6,17 +6,23 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+
 import {
   Add as AddIcon,
   Group as GroupIcon,
   Logout as LogoutIcon,
   Menu as MenuIcon,
-  Notifications as NotificationsIcon, // Missing comma added here
+  Notifications as NotificationsIcon,
   Search as SearchIcon,
 } from "@mui/icons-material";
-import React, { useState } from "react";
+
+import React, { lazy, Suspense, useState } from "react";
 import { orange } from "../constants/color";
 import { useNavigate } from "react-router-dom";
+
+const SearchDialog = lazy(() => import("../specific/Search"));
+const NotificationDialog = lazy(() => import("../specific/Notifications"));
+const NewGroupDialog = lazy(() => import("../specific/NewGroup"));
 
 // Define IconBtn component before usage
 const IconBtn = ({ title, icon, onClick }) => {
@@ -62,67 +68,87 @@ const Header = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, height: "4rem" }}>
-      <AppBar
-        position="static"
-        sx={{
-          bgcolor: orange,
-        }}
-      >
-        <Toolbar>
-          <Typography
-            variant="h6"
-            sx={{ display: { xs: "none", sm: "block" } }}
-          >
-            GupShup
-          </Typography>
+    <>
+      <Box sx={{ flexGrow: 1, height: "4rem" }}>
+        <AppBar
+          position="static"
+          sx={{
+            bgcolor: orange,
+          }}
+        >
+          <Toolbar>
+            <Typography
+              variant="h6"
+              sx={{ display: { xs: "none", sm: "block" } }}
+            >
+              GupShup
+            </Typography>
 
-          <Box sx={{ display: { xs: "block", sm: "none" } }}>
-            <IconButton color="inherit" onClick={handleMobile}>
-              <MenuIcon />
-            </IconButton>
-          </Box>
+            <Box sx={{ display: { xs: "block", sm: "none" } }}>
+              <IconButton color="inherit" onClick={handleMobile}>
+                <MenuIcon />
+              </IconButton>
+            </Box>
 
-          <Box
-            sx={{
-              flexGrow: 1,
-            }}
-          />
-
-          <Box>
-            <IconBtn
-              title={"Search"}
-              icon={<SearchIcon />}
-              onClick={openSearch}
+            <Box
+              sx={{
+                flexGrow: 1,
+              }}
             />
 
-            <IconBtn
-              title={"New Group"}
-              icon={<AddIcon />}
-              onClick={openNewGroup}
-            />
+            <Box>
+              <IconBtn
+                title={"Search"}
+                icon={<SearchIcon />}
+                onClick={openSearch}
+              />
 
-            <IconBtn
-              title={"Manage Groups"}
-              icon={<GroupIcon />}
-              onClick={navigateToGroup}
-            />
+              <IconBtn
+                title={"New Group"}
+                icon={<AddIcon />}
+                onClick={openNewGroup}
+              />
 
-            <IconBtn
-              title={"Logout"}
-              icon={<LogoutIcon />}
-              onClick={LogoutHandler}
-            />
+              <IconBtn
+                title={"Manage Groups"}
+                icon={<GroupIcon />}
+                onClick={navigateToGroup}
+              />
 
-            <IconBtn
-              title={"Notifications"}
-              icon={<NotificationsIcon />}
-              onClick={openNotification}
-            />
-          </Box>
-        </Toolbar>
-      </AppBar>
-    </Box>
+              <IconBtn
+                title={"Notifications"}
+                icon={<NotificationsIcon />}
+                onClick={openNotification}
+              />
+
+              <IconBtn
+                title={"Logout"}
+                icon={<LogoutIcon />}
+                onClick={LogoutHandler}
+              />
+            </Box>
+          </Toolbar>
+        </AppBar>
+      </Box>
+
+      {isSearch && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <SearchDialog />
+        </Suspense>
+      )}
+
+      {isNotification && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <NotificationDialog />
+        </Suspense>
+      )}
+
+      {isNewGroup && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <NewGroupDialog />
+        </Suspense>
+      )}
+    </>
   );
 };
 
